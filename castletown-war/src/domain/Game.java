@@ -5,6 +5,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
+import domain.player.AIPlayer;
+import domain.player.HumanPlayer;
+
 public class Game {
 
 	/**
@@ -18,14 +21,29 @@ public class Game {
 		br = new BufferedReader(new InputStreamReader(System.in));
 		initPlayers();
 		boolean isGameOver = false;
-		//int roundNumber = 0;
+		int roundNumber = 0;
 		System.out.println("Let the game begin!");
 		while(!isGameOver){
+			System.out.println("Round " + roundNumber);
 			for(int i = 0; i < players.size(); ++i){
-				
+				players.get(i).play();
+				isGameOver = checkIfWinner(i);
 			}
 		}
 		
+	}
+	
+	public static boolean checkIfWinner(int winner){
+		int alivePlayers = players.size();
+		for(int i = 0; i < players.size(); ++i){
+			if(i != winner)
+				if(!players.get(i).isAlive())
+					--alivePlayers;
+		}
+		if(alivePlayers == 0)
+			return true;
+		else
+			return false;
 	}
 	
 	public static void initPlayers(){
@@ -46,11 +64,11 @@ public class Game {
 		}
 		for(int i = 0; i < nOfPlayers; ++i){
 			if(nOfHumanPlayers > 0){
-				players.add(new HumanPlayer());
+				players.add(new HumanPlayer(String.valueOf(i)));
 				--nOfHumanPlayers;
 			}
 			else
-				players.add(new AIPlayer());
+				players.add(new AIPlayer(String.valueOf(i)));
 		}
 	}
 	
