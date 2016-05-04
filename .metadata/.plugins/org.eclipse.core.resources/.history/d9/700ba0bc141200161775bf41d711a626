@@ -1,9 +1,0 @@
-package domain;
-
-public class Player {
-	boolean isHuman;
-	Hand hand;
-	public Player(){
-		hand = new Hand();		
-	}
-}
