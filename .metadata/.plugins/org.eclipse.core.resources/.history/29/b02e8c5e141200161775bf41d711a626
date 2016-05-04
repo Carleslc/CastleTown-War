@@ -1,0 +1,11 @@
+package domain;
+
+public class Player {
+	boolean isHuman;
+	Hand hand;
+	public Player(boolean isHuman){
+		this.isHuman = isHuman;
+		hand = new Hand();
+		
+	}
+}

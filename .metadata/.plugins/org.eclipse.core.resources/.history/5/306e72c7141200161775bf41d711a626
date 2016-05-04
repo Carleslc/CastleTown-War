@@ -1,0 +1,10 @@
+package domain;
+
+public class Player {
+	boolean isAlive;
+	Hand hand;
+	public Player(){
+		hand = new Hand();	
+		isAlive = true;
+	}
+}

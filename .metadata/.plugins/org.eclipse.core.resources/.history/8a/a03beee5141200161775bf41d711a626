@@ -1,0 +1,16 @@
+package domain;
+
+public class Player {
+	boolean isAlive;
+	int life;
+	int attackPool;
+	int defensePool;
+	int gold;
+	Hand hand;
+	public Player(){
+		hand = new Hand();	
+		isAlive = true;
+		life = 20;
+		attackPool = 0;
+	}
+}

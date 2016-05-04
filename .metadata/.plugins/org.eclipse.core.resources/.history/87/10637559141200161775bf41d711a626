@@ -1,0 +1,10 @@
+package domain;
+
+public class AIPlayer extends Player {
+
+	public AIPlayer(boolean isHuman) {
+		super(isHuman);
+		// TODO Auto-generated constructor stub
+	}
+
+}
