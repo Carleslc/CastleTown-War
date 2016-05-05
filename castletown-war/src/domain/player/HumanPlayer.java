@@ -1,7 +1,5 @@
 package domain.player;
 
-import domain.Player;
-
 public class HumanPlayer extends Player {
 
 	public HumanPlayer(String name) {
@@ -10,8 +8,8 @@ public class HumanPlayer extends Player {
 
 	@Override
 	public void play() {
-		// TODO Auto-generated method stub
-		
+		// TODO
+		damage(getLife()); // provisional to ensure that the program ends
 	}
 
 }

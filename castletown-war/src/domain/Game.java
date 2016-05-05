@@ -1,91 +1,131 @@
 package domain;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
+import java.util.Collection;
+import java.util.ListIterator;
 
 import domain.player.AIPlayer;
 import domain.player.HumanPlayer;
+import domain.player.Player;
+import domain.utils.CircularBuffer;
+import domain.utils.IO;
 
-public class Game {
+public class Game implements Runnable {
+
+	private CircularBuffer<Player> players;
+	private boolean isGameOver;
 
 	/**
-	 * @param args
+	 * Initialize a Game asking for players through console.
 	 */
-	static BufferedReader br;
-	static ArrayList<Player> players;
-
-
-	public static void main(String[] args) {
-		br = new BufferedReader(new InputStreamReader(System.in));
+	public Game() {
 		initPlayers();
-		boolean isGameOver = false;
-		int roundNumber = 0;
+	}
+	
+	/**
+	 * Initialize a Game with the specified players.
+	 * @param players players to play this game
+	 * @throws IllegalArgumentException if <code>players.size() < 2</code>
+	 */
+	public Game(Collection<Player> players) throws IllegalArgumentException {
+		if (players.size() < 2)
+			throw new IllegalArgumentException("A game must have at least two players!");
+		this.players = new CircularBuffer<>(players);
+	}
+	
+	/**
+	 * Plays this game.
+	 */
+	public void run() {
+		isGameOver = false;
+		int roundNumber = 1;
 		System.out.println("Let the game begin!");
-		while(!isGameOver){
+		
+		while (!isGameOver) {
 			System.out.println("Round " + roundNumber);
-			for(int i = 0; i < players.size(); ++i){
-				players.get(i).play();
-				isGameOver = checkIfWinner(i);
-			}
+			nextRound();
+			roundNumber++;
 		}
 		
+		System.out.println("Game finished! Winner is " + players.peek().getName());
 	}
 	
-	public static boolean checkIfWinner(int winner){
-		int alivePlayers = players.size();
-		for(int i = 0; i < players.size(); ++i){
-			if(i != winner)
-				if(!players.get(i).isAlive())
-					--alivePlayers;
-		}
-		if(alivePlayers == 0)
-			return true;
-		else
-			return false;
-	}
-	
-	public static void initPlayers(){
-		System.out.println("Welcome to CastleTown War!");
-		boolean ready = false;
-		int nOfPlayers = 0;
-		int nOfHumanPlayers = 0;
-		while(!ready){
-			System.out.println("How many players will this game have?");
-			nOfPlayers = askForInt();	
-			System.out.println("¿How many of those are going to be human?");
-			nOfHumanPlayers = askForInt();	
-			if(nOfPlayers < nOfHumanPlayers){
-				System.out.println("The number of players can't be less than the number of HUMAN players!");
-			}
-			else
-				ready = true;
-		}
-		for(int i = 0; i < nOfPlayers; ++i){
-			if(nOfHumanPlayers > 0){
-				players.add(new HumanPlayer(String.valueOf(i)));
-				--nOfHumanPlayers;
-			}
-			else
-				players.add(new AIPlayer(String.valueOf(i)));
+	/**
+	 * Start a new round.
+	 */
+	private void nextRound() {
+		int turnNumber = 1;
+		ListIterator<Player> it = players.listIterator();
+		// Inv: players contains all players alive
+		while (!isGameOver && it.nextIndex() < players.size()) {
+			System.out.println("Turn " + turnNumber);
+			nextTurn(it);
+			turnNumber++;
 		}
 	}
 	
-	static int askForInt(){
-		boolean success = false;
-		int ret = -1;
-		while(!success){
-			try {
-				ret = Integer.parseInt(br.readLine());
-				success = true;
-			} catch (NumberFormatException e) {
-				System.out.println("Introduce a valid integer");
-			} catch (IOException e) {
-				System.out.println("IO Exception while reading integer");
-			}
-		}
-		return ret;
+	/**
+	 * Start a new turn.
+	 * @param it iterator pointing to a valid next player.
+	 */
+	private void nextTurn(ListIterator<Player> it) {
+		Player player = it.next();
+		System.out.println("Playing " + player.getName());
+		player.play();
+		checkGameOver(it);
 	}
 
+	/**
+	 * Iterates all players checking deaths and updating the players queue.
+	 * Sets {@link #isGameOver} to <code>true</code> when only one player is living.
+	 * @param it iterator which previous is the last player that has played
+	 */
+	private void checkGameOver(ListIterator<Player> it) {
+		int currentPosition = it.previousIndex();
+		
+		// Check if current player died this turn
+		boolean currentPlayerIsDead = !it.previous().isAlive();
+		it.next();
+		
+		// Check other dead players
+		while (it.nextIndex() != currentPosition) {
+			if (!it.next().isAlive())
+				it.remove();
+		}
+		
+		it.next(); // Same point as initially
+
+		if (currentPlayerIsDead)
+			it.remove();
+		
+		isGameOver = players.size() == 1;
+	}
+	
+	private void initPlayers() {
+		players = new CircularBuffer<>();
+		
+		int nOfPlayers = 0;
+		int nOfHumanPlayers = 0;
+		
+		System.out.println("How many players will this game have?");
+		nOfPlayers = IO.nextIntMinimum(2);
+		
+		do {
+			System.out.println("How many of those are going to be human?");
+			nOfHumanPlayers = IO.nextIntMinimum(0);
+			if (nOfPlayers < nOfHumanPlayers)
+				System.out.println("The number of players can't be less than the number of HUMAN players!");
+		} while (nOfPlayers < nOfHumanPlayers);
+		
+		for (int i = 1; i <= nOfHumanPlayers; ++i)
+			players.add(new HumanPlayer(String.valueOf(i)));
+		
+		for (int i = 1; i <= nOfPlayers - nOfHumanPlayers; ++i)
+			players.add(new AIPlayer("AI-" + i));
+	}
+
+	@Override
+	public String toString() {
+		return "Players Alive: " + players;
+	}
+	
 }
