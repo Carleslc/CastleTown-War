@@ -9,7 +9,7 @@ import domain.player.Player;
 public abstract class Attachment extends Card {
 	
 	private int attachCost;
-	private UpgradableBuilding attachedBuilding;
+	protected UpgradableBuilding attachedBuilding;
 	
 	public Attachment(String name, int attachCost, int effectCost) {
 		this(name, name, attachCost, effectCost);
