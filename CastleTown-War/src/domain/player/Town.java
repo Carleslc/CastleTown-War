@@ -19,16 +19,13 @@ public class Town {
 		this.owner = owner;
 		
 		mines = new ArrayList<>();
-		mines.add(new Mine());
+		mines.add(new Mine(true));
 		
 		barracks = new ArrayList<>();
-		barracks.add(new Barracks());
-		
-		walls = new ArrayList<>();
-		walls.add(new Wall());
+		barracks.add(new Barracks(true));
 		
 		churches = new ArrayList<>();
-		churches.add(new Church());
+		churches.add(new Church(true));
 	}
 
 	public Player getOwner() {
