@@ -1,21 +1,20 @@
 package domain.player;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
-
 import domain.cards.Card;
 
 public class Hand implements Collection<Card> {
 	
-	private LinkedList<Card> cards;
+	private HashSet<Card> cards;
 	
 	public Hand() {
-		cards = new LinkedList<>();
+		cards = new HashSet<>();
 	}
 	
 	public Hand(Collection<Card> cards) {
-		this.cards = new LinkedList<>(cards);
+		this.cards = new HashSet<>(cards);
 	}
 
 	@Override

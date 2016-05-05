@@ -2,37 +2,53 @@ package domain.player;
 
 import java.util.ArrayList;
 
-import domain.building.Barracks;
-import domain.building.Church;
-import domain.building.Mine;
-import domain.building.Wall;
+import domain.cards.building.Barracks;
+import domain.cards.building.Church;
+import domain.cards.building.Mine;
+import domain.cards.building.Wall;
 
 public class Town {
 	
 	private Player owner;
-	private ArrayList<Barracks> barracks;
-	private ArrayList<Church> churches;
 	private ArrayList<Mine> mines;
+	private ArrayList<Barracks> barracks;
 	private ArrayList<Wall> walls;
+	private ArrayList<Church> churches;
 	
 	public Town(Player owner) {
 		this.owner = owner;
 		
-		barracks = new ArrayList<>();
-		barracks.add(new Barracks(owner));
-		
-		churches = new ArrayList<>();
-		churches.add(new Church(owner));
-		
 		mines = new ArrayList<>();
-		mines.add(new Mine(owner));
+		mines.add(new Mine());
+		
+		barracks = new ArrayList<>();
+		barracks.add(new Barracks());
 		
 		walls = new ArrayList<>();
-		walls.add(new Wall(owner));
+		walls.add(new Wall());
+		
+		churches = new ArrayList<>();
+		churches.add(new Church());
 	}
 
 	public Player getOwner() {
 		return owner;
+	}
+	
+	public ArrayList<Mine> getMines() {
+		return mines;
+	}
+	
+	public ArrayList<Barracks> getBarracks() {
+		return barracks;
+	}
+
+	public ArrayList<Wall> getWalls() {
+		return walls;
+	}
+
+	public ArrayList<Church> getChurches() {
+		return churches;
 	}
 
 	@Override
