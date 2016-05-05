@@ -24,6 +24,8 @@ public class Deck implements Iterable<Card> {
 	 */
 	public Deck(boolean shuffle) {
 		// TODO
+		if (shuffle)
+			shuffle();
 	}
 	
 	/**
