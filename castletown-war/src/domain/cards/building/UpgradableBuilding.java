@@ -4,6 +4,7 @@ import domain.cards.building.upgrades.Attachment;
 import domain.exceptions.CannotActivateException;
 import domain.exceptions.NotBuiltException;
 import domain.exceptions.NotEnoughGoldException;
+import domain.player.Player;
 
 public abstract class UpgradableBuilding extends Building {
 
@@ -19,6 +20,11 @@ public abstract class UpgradableBuilding extends Building {
 	
 	public UpgradableBuilding(String name, String description, int buildingCost, int effectCost, boolean built) {
 		super(name, description, buildingCost, effectCost, built);
+	}
+	
+	protected void applyEffect(Player activator) throws CannotActivateException {
+		if (isUpgraded())
+			attachment.activate(activator);
 	}
 	
 	public boolean isUpgraded() {

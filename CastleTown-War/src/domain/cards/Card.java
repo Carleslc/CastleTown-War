@@ -37,7 +37,7 @@ public abstract class Card implements Activable {
 		activator.substractGold(cost);
 	}
 	
-	protected abstract void applyEffect(Player activator);
+	protected abstract void applyEffect(Player activator) throws CannotActivateException;
 	
 	public String getName() {
 		return name;

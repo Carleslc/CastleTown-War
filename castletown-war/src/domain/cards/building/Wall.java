@@ -1,7 +1,5 @@
 package domain.cards.building;
 
-import domain.player.Player;
-
 public class Wall extends UpgradableBuilding {
 
 	private int defenseBonus;
@@ -28,9 +26,6 @@ public class Wall extends UpgradableBuilding {
 		owner.getTown().getWalls().add(this);
 		owner.addDefense(defenseBonus);
 	}
-	
-	@Override
-	protected void applyEffect(Player activator) {}
 
 	public int getDefenseBonus() {
 		return defenseBonus;
